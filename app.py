@@ -14,40 +14,41 @@ import shutil
 
 st.set_page_config(layout="wide")
 
+def get_driver():
+    options = Options()
+    options.add_argument("--headless=new")  # Critical for cloud
+    options.add_argument("--no-sandbox")     # Critical for Linux/Docker
+    options.add_argument("--disable-dev-shm-usage") # Overcomes limited resource problems
+    options.add_argument("--disable-gpu")
+    options.add_argument("--window-size=1920,1080")
+
+    # 1. Check for Chromium (Common on Streamlit Cloud/Linux)
+    chromium_path = shutil.which("chromium") or shutil.which("chromium-browser")
+    
+    if chromium_path:
+        # We are on Linux/Cloud
+        options.binary_location = chromium_path
+        try:
+            # Try to use the system chromedriver first
+            service = Service("/usr/bin/chromedriver")
+            return webdriver.Chrome(service=service, options=options)
+        except:
+            # Fallback to webdriver_manager
+            return webdriver.Chrome(service=Service(ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install()), options=options)
+    else:
+        # We are likely on Windows or Mac
+        return webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+
 # Keep text only
 def get_clues():
-    driver = None
     try:
-        options = webdriver.ChromeOptions()
-
-        options.add_argument("--headless=new") # Use the modern headless engine
-        options.add_argument("--no-sandbox") # Required for Linux/Docker environments
-        options.add_argument("--disable-dev-shm-usage") # Fixes 'renderer' and memory crashes, Overcomes limited resource problems
-        options.add_argument("--disable-gpu") # Saves memory
-        options.add_argument("--remote-debugging-port=9222")
-        options.add_argument("--window-size=1920,1080") # Prevents some 'element not found' errors
-        # Helps prevent the browser from being detected/closed by the host
-        options.add_argument("--disable-extensions")
-        options.add_argument("--proxy-server='direct://'")
-        options.add_argument("--proxy-bypass-list=*")
-        options.add_argument("--start-maximized")
-        
-        # 1. Dynamically find the path to Chromium/Chrome
-        # This checks common Linux paths, otherwise it stays None for Windows/Mac
-        chromium_path = shutil.which("chromium") or shutil.which("chromium-browser") or shutil.which("google-chrome")
-        
-        if chromium_path:
-            options.binary_location = chromium_path
-        
-        # 2. Use webdriver-manager to get the driver
-        # It will automatically detect if you need Chromium or standard Chrome drivers
-        try:
-            service = Service(ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install())
-        except:
-            # Fallback to standard Chrome if Chromium installation fails
-            service = Service(ChromeDriverManager().install())
-            
-        driver = webdriver.Chrome(service=service, options=options)
+        driver = get_driver()
+        driver.get("https://www.minutecryptic.com")
+        st.write("Title:", driver.title)
+        driver.quit()
+    except Exception as e:
+        st.error(f"Driver Error: {e}")
+    try:
         driver.get("https://www.minutecryptic.com")
         button_xpath = "//button[.//p[contains(text(), 'not now')]]"
         try:
