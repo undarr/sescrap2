@@ -10,6 +10,7 @@ from webdriver_manager.core.os_manager import ChromeType
 import time
 import json
 import re
+import shutil
 
 st.set_page_config(layout="wide")
 
