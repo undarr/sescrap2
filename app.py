@@ -5,6 +5,7 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from webdriver_manager.core.os_manager import ChromeType
 import time
 import json
@@ -30,10 +31,8 @@ def get_clues():
         options.add_argument("--proxy-server='direct://'")
         options.add_argument("--proxy-bypass-list=*")
         options.add_argument("--start-maximized")
-    
         options.binary_location = "/usr/bin/chromium"
-        driver = webdriver.Chrome(service=Service(ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install()),
-                                  options=options)
+        driver = webdriver.Chrome(service=Service(ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install()),options=options)
         driver.get("https://www.minutecryptic.com")
         button_xpath = "//button[.//p[contains(text(), 'not now')]]"
         try:
