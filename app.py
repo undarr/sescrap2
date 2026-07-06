@@ -1,6 +1,7 @@
 import streamlit as st
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -49,6 +50,7 @@ def get_clues():
     except Exception as e:
         st.error(f"Driver Error: {e}")
     try:
+        driver = get_driver()
         driver.get("https://www.minutecryptic.com")
         button_xpath = "//button[.//p[contains(text(), 'not now')]]"
         try:
