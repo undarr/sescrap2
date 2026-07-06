@@ -32,7 +32,8 @@ def get_clues():
         options.add_argument("--proxy-bypass-list=*")
         options.add_argument("--start-maximized")
         options.binary_location = "/usr/bin/chromium"
-        driver = webdriver.Chrome(service=Service(ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install()),options=options)
+        service = Service("/usr/bin/chromedriver")
+        driver = webdriver.Chrome(service=service, options=options)
         driver.get("https://www.minutecryptic.com")
         button_xpath = "//button[.//p[contains(text(), 'not now')]]"
         try:
