@@ -25,20 +25,9 @@ def get_driver():
 
     # 1. Check for Chromium (Common on Streamlit Cloud/Linux)
     chromium_path = shutil.which("chromium") or shutil.which("chromium-browser")
-    
-    if chromium_path:
-        # We are on Linux/Cloud
-        options.binary_location = chromium_path
-        try:
-            # Try to use the system chromedriver first
-            service = Service("/usr/bin/chromedriver")
-            return webdriver.Chrome(service=service, options=options)
-        except:
-            # Fallback to webdriver_manager
-            return webdriver.Chrome(service=Service(ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install()), options=options)
-    else:
-        # We are likely on Windows or Mac
-        return webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    options.binary_location = chromium_path
+    service = Service("/usr/bin/chromedriver")
+    return webdriver.Chrome(service=service, options=options)
 
 # Keep text only
 def get_clues():
