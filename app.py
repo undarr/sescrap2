@@ -18,24 +18,18 @@ for p in paths:
 def get_driver():
     options = Options()
     
-    # 1. NEW HEADLESS MODE (Crucial for newer Chrome versions)
+    # 1. Essential Headless Flags
     options.add_argument("--headless=new")
-    
-    # 2. ESSENTIAL CLOUD FLAGS
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
     options.add_argument("--disable-gpu")
     options.add_argument("--disable-extensions")
-    options.add_argument("--remote-debugging-pipe") # Added this: more stable than ports
     
-    # 3. SET BINARY LOCATION
-    # If /usr/bin/chromium doesn't exist, we try chromium-browser
-    if os.path.exists("/usr/bin/chromium"):
-        options.binary_location = "/usr/bin/chromium"
-    elif os.path.exists("/usr/bin/chromium-browser"):
-        options.binary_location = "/usr/bin/chromium-browser"
-        
-    # 4. START SERVICE
+    # 2. Tell Selenium where the Chromium browser is
+    options.binary_location = "/usr/bin/chromium"
+    
+    # 3. Tell Selenium where the MATCHING driver is
+    # (Installed via packages.txt to /usr/bin/chromedriver)
     service = Service("/usr/bin/chromedriver")
     
     return webdriver.Chrome(service=service, options=options)
