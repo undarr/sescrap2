@@ -153,7 +153,7 @@ def get_clues():
                 # If the element isn't even on the page yet, find_element fails, 
                 # so we return False to keep waiting
                 return False
-        dc=['','','','']\
+        dc=['','','','']
         dc[0] = (re.search(r'targetWord\s*=\s*["\']([^"\']+)["\']', html) or [None, ''])[1]
         dc[1] = (re.search(r'clueData\s*=\s*["\']([^"\']+)["\']', html) or [None, ''])[1]
         dc[2] = (re.search(r'urlData\s*=\s*["\']([^"\']+)["\']', html) or [None, ''])[1]
