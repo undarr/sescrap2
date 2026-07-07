@@ -152,13 +152,6 @@ def get_clues():
                     typeof urlData !== 'undefined' && 
                     typeof definitionData !== 'undefined');
             """)
-        while not dca:
-            dca=driver.execute_script("""
-            return (typeof targetWord !== 'undefined' && 
-                    typeof clueData !== 'undefined' && 
-                    typeof urlData !== 'undefined' && 
-                    typeof definitionData !== 'undefined');
-            """)
         while '' in dc:
             dc[0]=driver.execute_script("return targetWord;")
             dc[1]=driver.execute_script("return clueData;")
