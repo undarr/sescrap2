@@ -141,7 +141,9 @@ def get_clues():
         image_element = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, img_alt_selector)))
         link_element = image_element.find_element(By.XPATH, xpath_to_parent_link)
         v = link_element.get_attribute('href')
+        dca="hi"
         driver.get("https://dailycrypticle.com")
+        dca="hi1"
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.TAG_NAME, "body")))
         dc=['','','','']
         dca=driver.execute_script("""
