@@ -11,7 +11,7 @@ try:
     st.success(f"Browser version check: {out}")
     
     st.info("Attempting mini-launch...")
-    cmd2 = ["/usr/bin/chromium", "--disable-features=dbus", "https://www.google.com"]
+    cmd2 = ["/usr/bin/chromium", "--headless", "--no-sandbox", "--disable-gpu", "--no-zygote", "--disable-features=dbus", "--dump-dom", "https://www.google.com"]
     out2 = subprocess.check_output(cmd2, stderr=subprocess.STDOUT, timeout=10).decode()
     st.write("Browser successfully rendered Google HTML!")
     
