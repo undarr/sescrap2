@@ -142,8 +142,8 @@ def get_clues():
         image_element = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, img_alt_selector)))
         link_element = image_element.find_element(By.XPATH, xpath_to_parent_link)
         v = link_element.get_attribute('href')
-        driver.get("https://dailycrypticle.com")
-        response = requests.get(url)
+        #driver.get("https://dailycrypticle.com")
+        response = requests.get("https://dailycrypticle.com/patent-stats")
         data = response.json()
         dc = [data[1], data[0], data[2], data[3]]
         dc[1]+=" ("+str(len(dc[0]))+")"
