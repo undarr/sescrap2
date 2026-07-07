@@ -163,6 +163,7 @@ def get_clues():
         return (' ()minc() '.join([q,a,h1,h2,h3,ht1,ht2,ht3,v,sn])+' ()big() '+' ()dc() '.join(dc))
     except Exception as e:
         st.write(f"DEBUG:INIT_DRIVER:ERROR:{e}")
+        st.write(' ()minc() '.join([q,a,h1,h2,h3,ht1,ht2,ht3,v,sn])
     finally:
         if driver is not None: driver.quit()
     return None
