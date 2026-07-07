@@ -1,2 +1,2 @@
-chromium=149.0.7827.200
-chromium-driver=149.0.7827.200
+chromium
+chromium-driver
