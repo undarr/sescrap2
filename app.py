@@ -142,8 +142,8 @@ def get_clues():
         link_element = image_element.find_element(By.XPATH, xpath_to_parent_link)
         v = link_element.get_attribute('href')
         driver.get("https://dailycrypticle.com")
-        WebDriverWait(driver, 15).until(lambda d: d.execute_script("return typeof targetWord !== 'undefined'"))
         dc=['','','','']
+        WebDriverWait(driver, 15).until(lambda d: d.execute_script("return typeof targetWord !== 'undefined'"))
         while '' in dc:
             dc[0]=driver.execute_script("return window.targetWord;")
             dc[1]=driver.execute_script("return window.clueData;")
