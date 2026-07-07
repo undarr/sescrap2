@@ -152,6 +152,13 @@ def get_clues():
                     typeof urlData !== 'undefined' && 
                     typeof definitionData !== 'undefined');
             """)
+        while !dca:
+            dca=driver.execute_script("""
+            return (typeof targetWord !== 'undefined' && 
+                    typeof clueData !== 'undefined' && 
+                    typeof urlData !== 'undefined' && 
+                    typeof definitionData !== 'undefined');
+            """)
         while '' in dc:
             dc[0]=driver.execute_script("return targetWord;")
             dc[1]=driver.execute_script("return clueData;")
@@ -162,7 +169,7 @@ def get_clues():
         return (' ()minc() '.join([q,a,h1,h2,h3,ht1,ht2,ht3,v,sn])+' ()big() '+' ()dc() '.join(dc))
     except Exception as e:
         st.write(f"DEBUG:INIT_DRIVER:ERROR:{e}")
-        st.write(' ()minc() '.join([q,a,h1,h2,h3,ht1,ht2,ht3,v,sn])+' ()big() '+dca)
+        st.write(' ()minc() '.join([q,a,h1,h2,h3,ht1,ht2,ht3,v,sn])+' ()big() '+str(dca))
     finally:
         if driver is not None: driver.quit()
     return None
