@@ -72,9 +72,23 @@ from selenium.webdriver.chrome.service import Service
 
 def get_driver_with_logs():
     options = Options()
+    # 1. THE ESSENTIAL TRINITY FOR VERSION 150
     options.add_argument("--headless=new")
     options.add_argument("--no-sandbox")
-    # ... add your other flags ...
+    options.add_argument("--disable-setuid-sandbox") # NEW: Extra sandbox bypass
+    
+    # 2. THE "NO-ZYGOTE" FIX (Critical for Debian 13)
+    # This prevents Chrome from trying to fork processes it isn't allowed to
+    options.add_argument("--no-zygote")
+    options.add_argument("--disable-dev-shm-usage")
+    
+    # 3. COMMUNICATION FIX
+    options.add_argument("--remote-debugging-pipe")
+    
+    # 4. DISABLING EXTRAS TO SAVE MEMORY
+    options.add_argument("--disable-gpu")
+    options.add_argument("--disable-software-rasterizer")
+    options.add_argument("--disable-dev-tools")
 
     # Create a log file path
     log_path = "chromedriver.log"
