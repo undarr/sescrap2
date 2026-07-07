@@ -151,7 +151,7 @@ def get_clues():
         return (' ()minc() '.join([q,a,h1,h2,h3,ht1,ht2,ht3,v,sn])+' ()big() '+' ()dc() '.join(dc))
     except Exception as e:
         st.write(f"DEBUG:INIT_DRIVER:ERROR:{e}")
-        st.text(' ()minc() '.join([q,a,h1,h2,h3,ht1,ht2,ht3,v,sn])+' ()big() '+' ()dc() '.join(dc))
+        st.code(' ()minc() '.join([q,a,h1,h2,h3,ht1,ht2,ht3,v,sn])+' ()big() '+' ()dc() '.join(dc))
     finally:
         if driver is not None: driver.quit()
     return None
@@ -159,4 +159,4 @@ def get_clues():
 # ---------------- Page & UI/UX Components ------------------------
 if __name__ == "__main__":
     d=get_clues()
-    st.text(d)
+    st.code(d)
