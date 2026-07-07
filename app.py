@@ -152,7 +152,7 @@ def get_clues():
                     typeof urlData !== 'undefined' && 
                     typeof definitionData !== 'undefined');
             """)
-        while !dca:
+        while not dca:
             dca=driver.execute_script("""
             return (typeof targetWord !== 'undefined' && 
                     typeof clueData !== 'undefined' && 
