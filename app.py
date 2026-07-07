@@ -144,21 +144,17 @@ def get_clues():
         driver.get("https://dailycrypticle.com")
         def check_page_ready(d):
             try:
-                st.write("hi1")
                 # 1. Check if the HTML element has text
                 html_text = d.find_element(By.ID, "clue").text.strip()
-                st.write("hi2")
                 # 2. Check if the JS variable is defined
                 js_var = d.execute_script("return typeof window.targetWord !== 'undefined';")
-                st.write("hi3")
-                
                 return html_text != "" and js_var is True
             except:
                 # If the element isn't even on the page yet, find_element fails, 
                 # so we return False to keep waiting
                 return False
         dc=['','','','']
-        WebDriverWait(driver, 15).until(check_page_ready)
+        WebDriverWait(driver, 15)
         while '' in dc:
             dc[0]=driver.execute_script("return window.targetWord;")
             dc[1]=driver.execute_script("return window.clueData;")
