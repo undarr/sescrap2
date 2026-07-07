@@ -1,42 +1,45 @@
-import subprocess
 import streamlit as st
-import tempfile
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
 import os
 
-st.subheader("Brute Force Browser Test")
+def get_driver():
+    options = Options()
+    
+    # 1. SET THE BINARY PATH TO GOOGLE CHROME (NOT CHROMIUM)
+    # When you install google-chrome-stable, it goes here:
+    options.binary_location = "/usr/bin/google-chrome"
+    
+    # 2. STABLE FLAGS
+    options.add_argument("--headless=new")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--no-zygote")
+    options.add_argument("--remote-debugging-pipe")
+    
+    # 3. USE WEBDRIVER-MANAGER TO GET THE MATCHING STABLE DRIVER
+    # This will automatically find version 131 (or current stable)
+    try:
+        driver_path = ChromeDriverManager().install()
+        service = Service(driver_path)
+        return webdriver.Chrome(service=service, options=options)
+    except Exception as e:
+        # Fallback to system driver if manager fails
+        st.warning("Webdriver Manager failed, trying system path...")
+        return webdriver.Chrome(service=Service("/usr/bin/chromedriver"), options=options)
 
-# Create a unique temp directory for this specific run
-# This fixes the 'Silent Exit' if Chromium can't write to the default profile
-temp_dir = tempfile.mkdtemp()
+st.title("Stable Chrome Scraper")
 
-cmd3 = [
-    "/usr/bin/chromium",
-    "--headless=old",           # <--- CHANGE: Use the legacy engine
-    "--no-sandbox",
-    "--no-zygote",
-    "--disable-gpu",
-    "--disable-dev-shm-usage",
-    "--disable-setuid-sandbox", # <--- ADDED: Extra sandbox bypass
-    f"--user-data-dir={temp_dir}", # <--- ADDED: Writable profile path
-    "--remote-debugging-pipe",
-    "--dump-dom",
-    "https://www.example.com"
-]
-
-try:
-    with st.spinner("Brute forcing launch..."):
-        # We capture stdout and stderr separately
-        result = subprocess.run(cmd3, capture_output=True, text=True, timeout=20)
-        
-        if result.stderr:
-            st.warning("System Warnings:")
-            st.code(result.stderr)
-            
-        if result.stdout:
-            st.success("✅ SUCCESS! The Brute Force method worked.")
-            st.code(result.stdout[:500])
-        else:
-            st.error("STILL EMPTY. Chromium is being killed by the Kernel.")
-            
-except Exception as e:
-    st.error(f"Error: {e}")
+if st.button("Run Scraper (Version 131 Stable)"):
+    try:
+        with st.spinner("Launching Google Chrome Stable..."):
+            driver = get_driver()
+            driver.get("https://www.example.com")
+            st.success(f"Success! Page title: {driver.title}")
+            driver.quit()
+    except Exception as e:
+        st.error("Still crashing. This suggests the Debian 13 environment is blocking all browser binaries.")
+        st.code(str(e))
