@@ -144,10 +144,13 @@ def get_clues():
         driver.get("https://dailycrypticle.com")
         def check_page_ready(d):
             try:
+                st.write("hi1")
                 # 1. Check if the HTML element has text
                 html_text = d.find_element(By.ID, "clue").text.strip()
+                st.write("hi2")
                 # 2. Check if the JS variable is defined
                 js_var = d.execute_script("return typeof window.targetWord !== 'undefined';")
+                st.write("hi3")
                 
                 return html_text != "" and js_var is True
             except:
