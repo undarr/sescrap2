@@ -1,3 +1,4 @@
+import os
 import subprocess
 import streamlit as st
 from selenium import webdriver
@@ -33,6 +34,39 @@ def get_driver():
     st.write(f"**Driver:** {driver_version}")
     
     return webdriver.Chrome(service=service, options=options)
+
+st.title("🔍 Path & Binary Checker")
+
+# The paths we are testing
+chrome_path = "/usr/bin/chromium"
+driver_path = "/usr/bin/chromedriver"
+
+def check_file(path, name):
+    st.subheader(f"Checking {name}")
+    if os.path.exists(path):
+        st.success(f"✅ Found: `{path}`")
+        
+        # Check if it's executable
+        if os.access(path, os.X_OK):
+            st.info(f"👍 `{name}` has permission to run.")
+        else:
+            st.error(f"⚠️ `{name}` is found, but cannot be executed (Permission Denied).")
+            
+        # Try to get the version by running it
+        try:
+            version = subprocess.check_output([path, "--version"]).decode()
+            st.write(f"**Version Info:** {version}")
+        except Exception as e:
+            st.warning(f"Could not get version: {e}")
+    else:
+        st.error(f"❌ NOT FOUND: `{path}`")
+        st.info(f"Try searching the system for `{name}`...")
+        # This searches the system to see where the OS put it
+        search = subprocess.check_output(["which", name.lower().replace(" ", "")]).decode()
+        st.write(f"System says `{name}` is actually at: `{search}`")
+
+check_file(chrome_path, "Chromium Browser")
+check_file(driver_path, "ChromeDriver")
 
 try:
     st.info("Starting Chromium 150...")
