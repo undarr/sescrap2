@@ -154,6 +154,7 @@ def get_clues():
                 # so we return False to keep waiting
                 return False
         dc=['','','','']
+        html = driver.page_source
         dc[0] = (re.search(r'targetWord\s*=\s*["\']([^"\']+)["\']', html) or [None, ''])[1]
         dc[1] = (re.search(r'clueData\s*=\s*["\']([^"\']+)["\']', html) or [None, ''])[1]
         dc[2] = (re.search(r'urlData\s*=\s*["\']([^"\']+)["\']', html) or [None, ''])[1]
