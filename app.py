@@ -142,7 +142,16 @@ def get_clues():
         link_element = image_element.find_element(By.XPATH, xpath_to_parent_link)
         v = link_element.get_attribute('href')
         driver.get("https://dailycrypticle.com")
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.TAG_NAME, "body")))
+        def check_js_variables(driver):
+            # This script returns true only if all variables are defined and not null
+            script = """
+            return (typeof targetWord !== 'undefined' && 
+                    typeof clueData !== 'undefined' && 
+                    typeof urlData !== 'undefined' && 
+                    typeof definitionData !== 'undefined');
+            """
+            return driver.execute_script(script)
+        WebDriverWait(driver, 10).until(check_js_variables)
         dc=['','','','']
         while '' in dc:
             dc[0]=driver.execute_script("return targetWord;")
