@@ -1,3 +1,4 @@
+import requests
 import streamlit as st
 from selenium import webdriver
 from selenium.webdriver.firefox.service import Service
@@ -142,30 +143,15 @@ def get_clues():
         link_element = image_element.find_element(By.XPATH, xpath_to_parent_link)
         v = link_element.get_attribute('href')
         driver.get("https://dailycrypticle.com")
-        def check_page_ready(d):
-            try:
-                # 1. Check if the HTML element has text
-                html_text = d.find_element(By.ID, "clue").text.strip()
-                # 2. Check if the JS variable is defined
-                js_var = d.execute_script("return typeof window.targetWord !== 'undefined';")
-                return html_text != "" and js_var is True
-            except:
-                # If the element isn't even on the page yet, find_element fails, 
-                # so we return False to keep waiting
-                return False
-        dc=['','','','']
-        html = driver.page_source
-        st.write(html)
-        dc[0] = (re.search(r'targetWord\s*=\s*["\']([^"\']+)["\']', html) or [None, ''])[1]
-        dc[1] = (re.search(r'clueData\s*=\s*["\']([^"\']+)["\']', html) or [None, ''])[1]
-        dc[2] = (re.search(r'urlData\s*=\s*["\']([^"\']+)["\']', html) or [None, ''])[1]
-        dc[3] = (re.search(r'definitionData\s*=\s*["\']([^"\']+)["\']', html) or [None, ''])[1]
+        response = requests.get(url)
+        data = response.json()
+        dc = [data[1], data[0], data[2], data[3]]
         dc[1]+=" ("+str(len(dc[0]))+")"
         driver.quit()
         return (' ()minc() '.join([q,a,h1,h2,h3,ht1,ht2,ht3,v,sn])+' ()big() '+' ()dc() '.join(dc))
     except Exception as e:
         st.write(f"DEBUG:INIT_DRIVER:ERROR:{e}")
-        st.write(' ()minc() '.join([q,a,h1,h2,h3,ht1,ht2,ht3,v,sn])+' ()big() '+' ()dc() '.join(dc))
+        st.text(' ()minc() '.join([q,a,h1,h2,h3,ht1,ht2,ht3,v,sn])+' ()big() '+' ()dc() '.join(dc))
     finally:
         if driver is not None: driver.quit()
     return None
