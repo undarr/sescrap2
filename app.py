@@ -1,45 +1,32 @@
 import streamlit as st
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
-from webdriver_manager.chrome import ChromeDriverManager
-import os
+from selenium.webdriver.firefox.service import Service
+from selenium.webdriver.firefox.options import Options
+from webdriver_manager.firefox import GeckoDriverManager
 
 def get_driver():
     options = Options()
+    options.add_argument("--headless")  # Standard headless mode
     
-    # 1. SET THE BINARY PATH TO GOOGLE CHROME (NOT CHROMIUM)
-    # When you install google-chrome-stable, it goes here:
-    options.binary_location = "/usr/bin/google-chrome"
+    # Firefox is much more stable in containers and 
+    # usually doesn't need the 'no-sandbox' or 'no-zygote' hacks.
     
-    # 2. STABLE FLAGS
-    options.add_argument("--headless=new")
-    options.add_argument("--no-sandbox")
-    options.add_argument("--disable-dev-shm-usage")
-    options.add_argument("--disable-gpu")
-    options.add_argument("--no-zygote")
-    options.add_argument("--remote-debugging-pipe")
-    
-    # 3. USE WEBDRIVER-MANAGER TO GET THE MATCHING STABLE DRIVER
-    # This will automatically find version 131 (or current stable)
-    try:
-        driver_path = ChromeDriverManager().install()
-        service = Service(driver_path)
-        return webdriver.Chrome(service=service, options=options)
-    except Exception as e:
-        # Fallback to system driver if manager fails
-        st.warning("Webdriver Manager failed, trying system path...")
-        return webdriver.Chrome(service=Service("/usr/bin/chromedriver"), options=options)
+    service = Service(GeckoDriverManager().install())
+    return webdriver.Firefox(service=service, options=options)
 
-st.title("Stable Chrome Scraper")
+st.title("Stable Firefox Scraper")
 
-if st.button("Run Scraper (Version 131 Stable)"):
+if st.button("Run Scraper (Firefox ESR)"):
     try:
-        with st.spinner("Launching Google Chrome Stable..."):
+        with st.spinner("Launching Firefox ESR (Stable)..."):
             driver = get_driver()
             driver.get("https://www.example.com")
             st.success(f"Success! Page title: {driver.title}")
+            
+            # Show a snippet of the page to prove it works
+            st.write("First 100 characters of page:")
+            st.code(driver.page_source[:100])
+            
             driver.quit()
     except Exception as e:
-        st.error("Still crashing. This suggests the Debian 13 environment is blocking all browser binaries.")
-        st.code(str(e))
+        st.error(f"Scraper Error: {e}")
