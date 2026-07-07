@@ -153,13 +153,11 @@ def get_clues():
                 # If the element isn't even on the page yet, find_element fails, 
                 # so we return False to keep waiting
                 return False
-        dc=['','','','']
-        WebDriverWait(driver, 15)
-        while '' in dc:
-            dc[0]=driver.execute_script("return window.targetWord;")
-            dc[1]=driver.execute_script("return window.clueData;")
-            dc[2]=driver.execute_script("return window.urlData;")
-            dc[3]=driver.execute_script("return window.definitionData;")
+        dc=['','','','']\
+        dc[0] = (re.search(r'targetWord\s*=\s*["\']([^"\']+)["\']', html) or [None, ''])[1]
+        dc[1] = (re.search(r'clueData\s*=\s*["\']([^"\']+)["\']', html) or [None, ''])[1]
+        dc[2] = (re.search(r'urlData\s*=\s*["\']([^"\']+)["\']', html) or [None, ''])[1]
+        dc[3] = (re.search(r'definitionData\s*=\s*["\']([^"\']+)["\']', html) or [None, ''])[1]
         dc[1]+=" ("+str(len(dc[0]))+")"
         driver.quit()
         return (' ()minc() '.join([q,a,h1,h2,h3,ht1,ht2,ht3,v,sn])+' ()big() '+' ()dc() '.join(dc))
