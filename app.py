@@ -142,8 +142,20 @@ def get_clues():
         link_element = image_element.find_element(By.XPATH, xpath_to_parent_link)
         v = link_element.get_attribute('href')
         driver.get("https://dailycrypticle.com")
+        def check_page_ready(d):
+            try:
+                # 1. Check if the HTML element has text
+                html_text = d.find_element(By.ID, "clue").text.strip()
+                # 2. Check if the JS variable is defined
+                js_var = d.execute_script("return typeof window.targetWord !== 'undefined';")
+                
+                return html_text != "" and js_var is True
+            except:
+                # If the element isn't even on the page yet, find_element fails, 
+                # so we return False to keep waiting
+                return False
         dc=['','','','']
-        WebDriverWait(driver, 15).until(lambda d: d.execute_script("return typeof targetWord !== 'undefined'"))
+        WebDriverWait(driver, 15).until(check_page_ready)
         while '' in dc:
             dc[0]=driver.execute_script("return window.targetWord;")
             dc[1]=driver.execute_script("return window.clueData;")
