@@ -146,17 +146,11 @@ def get_clues():
         dca="hi1"
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.TAG_NAME, "body")))
         dc=['','','','']
-        dca=driver.execute_script("""
-            return (typeof targetWord !== 'undefined' && 
-                    typeof clueData !== 'undefined' && 
-                    typeof urlData !== 'undefined' && 
-                    typeof definitionData !== 'undefined');
-            """)
         while '' in dc:
-            dc[0]=driver.execute_script("return targetWord;")
-            dc[1]=driver.execute_script("return clueData;")
-            dc[2]=driver.execute_script("return urlData;")
-            dc[3]=driver.execute_script("return definitionData;")
+            dc[0]=driver.execute_script("return window.targetWord;")
+            dc[1]=driver.execute_script("return window.clueData;")
+            dc[2]=driver.execute_script("return window.urlData;")
+            dc[3]=driver.execute_script("return window.definitionData;")
         dc[1]+=" ("+str(len(dc[0]))+")"
         driver.quit()
         return (' ()minc() '.join([q,a,h1,h2,h3,ht1,ht2,ht3,v,sn])+' ()big() '+' ()dc() '.join(dc))
