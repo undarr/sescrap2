@@ -151,7 +151,7 @@ def get_clues():
                     typeof definitionData !== 'undefined');
             """
             return driver.execute_script(script)
-        WebDriverWait(driver, 10).until(check_js_variables)
+        WebDriverWait(driver, 10).until(check_js_variables(driver))
         dc=['','','','']
         while '' in dc:
             dc[0]=driver.execute_script("return targetWord;")
