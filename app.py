@@ -68,6 +68,38 @@ def check_file(path, name):
 check_file(chrome_path, "Chromium Browser")
 check_file(driver_path, "ChromeDriver")
 
+from selenium.webdriver.chrome.service import Service
+
+def get_driver_with_logs():
+    options = Options()
+    options.add_argument("--headless=new")
+    options.add_argument("--no-sandbox")
+    # ... add your other flags ...
+
+    # Create a log file path
+    log_path = "chromedriver.log"
+    
+    # Start service with verbose logging
+    service = Service(
+        executable_path="/usr/bin/chromedriver", 
+        log_path=log_path,
+        service_args=["--verbose"]
+    )
+    
+    return webdriver.Chrome(service=service, options=options), log_path
+
+# In your Streamlit app:
+if st.button("Debug Flags"):
+    try:
+        driver, log_file = get_driver_with_logs()
+        st.success("Started successfully!")
+        driver.quit()
+    except Exception as e:
+        st.error("Crash detected. Reading logs...")
+        if os.path.exists("chromedriver.log"):
+            with open("chromedriver.log", "r") as f:
+                st.code(f.read()) # This will show exactly why Chrome said 'No'
+
 try:
     st.info("Starting Chromium 150...")
     driver = get_driver()
